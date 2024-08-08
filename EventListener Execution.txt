@@ -1,0 +1,17 @@
+So we want to create a quiz app that provides the user with five questions each with option a,b,c and d. the user then has to select the right answer from the options.
+
+once the user selects an answer, they will then proceed to submit the answer and immediately get a repsonse back telling them wether they answered correctly or not.
+
+
+
+
+//BEHAVIOUR
+/**we want to write a behaviour which recognizes the answer selected and compares that answer to the correct one already in the database to see if both are equal to each other which if thats the case a value is returned confirming that the answer the user submitted was correct. if the asnwer submitted is wrong relative to the one in the database then a value is returned indicating that the user is wrong and should try again 
+ * 
+ so the selected answer should be captured
+ the submission of the answer should trigger the program do a comparison
+ after comparison a result should be returned
+
+ how do we capture a selected answer ?
+ grab the element containing the answer by the I.D
+*/
