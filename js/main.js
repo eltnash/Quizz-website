@@ -14,7 +14,7 @@ const quizData = [
         B: "Madrid",
         C: "Paris",
         D: "Rome",
-        correct: "c"
+        correct: "C"
     },
     {
         question: "Which planet is known as the Red Planet?",
@@ -64,6 +64,11 @@ const submitBtn = document.getElementById("submit");
 
 
 const ulContainer = document.getElementById("ul-container");
+const input_a = document.getElementById("a");
+const input_b = document.getElementById("b");
+const input_c = document.getElementById("c");
+const input_d = document.getElementById("d");
+
 
 const endMessage = document.getElementById("end-message");
 const newElement = document.createElement("h3"); // Corrected here
@@ -84,12 +89,24 @@ const newElement = document.createElement("h3"); // Corrected here
 
 //HOW DO I LOAD ONE QUIZ QUESTION AND ANSWER OPTIONS AT A TIME ? (INDEXING)
 let currentQuestion = 0;
-const currentQuizQuestion = quizData[currentQuestion];
-//add object at index 0 of the array and its properties into this variable.
-
 
 function loadquiz() {
-            //LOCAL SCOPE
+
+            input_a.style.visibility = "visible";
+            input_b.style.visibility = "visible";
+            input_c.style.visibility = "visible";
+            input_d.style.visibility = "visible";
+            submitBtn.style.visibility = "visible";
+
+            // Clear previous selection
+            const answers = document.querySelectorAll('input[name="answer"]');
+            answers.forEach(answer => {
+                answer.checked = false; // Uncheck all radio buttons
+            });
+       
+            const currentQuizQuestion = quizData[currentQuestion];
+            //we are currently at index **, perform the comands below.
+            //add object at index 0 of the array and its properties into this variable.
 
             questionEL.innerText = currentQuizQuestion.question;
             //Assign content to this element /* from this object, select this specific property  */
@@ -113,35 +130,124 @@ loadquiz();
 // WHAT BEHAVIOUR OD I WANT WHEN I CLICK THE SUBMIT BUTTON
 /** */
 
-submitBtn.addEventListener("click",function(){
-    //LOCAL SCOPE
-    // currentQuestion++;
-   
-    //HOW DO I MOVE ON TO THE NEXT QUESTION ONCE IVE CLICKED THE SUBMIT BUTTON ?
-    if (currentQuestion < quizData.length-1) {
-        currentQuestion++;
-        loadquiz()
-    }else {
+// submitBtn.addEventListener("click",function(){
+//     //LOCAL SCOPE
+//     // currentQuestion++;
+//     //HOW DO I MOVE ON TO THE NEXT QUESTION ONCE IVE CLICKED THE SUBMIT BUTTON ?
+//     if (currentQuestion < quizData.length-1) {
+//         currentQuestion++;
+//         loadquiz()
+//     }else {
         
-        //How can i Add content to new h2 content and style it ?
+//         //How can i Add content to new h2 content and style it ?
 
-        questionEL.innerText = "Congradulations!!!";
-        questionEL.style.fontSize = "clamp(1rem, 3vw, 2rem)";
-        questionEL.style.margin = "10px";
+//         questionEL.innerText = "Congradulations!!!";
+//         questionEL.style.fontSize = "clamp(1rem, 3vw, 2rem)";
+//         questionEL.style.margin = "10px";
 
-         // How can i Add content to new h3 element and style it ?
-        newElement.textContent = "You have finished the quiz:)"; 
-        endMessage.appendChild(newElement);
+//          // How can i Add content to new h3 element and style it ?
+//         newElement.textContent = "You have finished the quiz:)"; 
+//         endMessage.appendChild(newElement);
           
-        newElement.style.textAlign = "center";
-        newElement.style.fontSize = "clamp(1rem, 3vw, 1.5rem)";
-        endMessage.style.margin = "10px";
+//         newElement.style.textAlign = "center";
+//         newElement.style.fontSize = "clamp(1rem, 3vw, 1.5rem)";
+//         endMessage.style.margin = "10px";
         
  
-        //How can i remove Specific Dom elements ?
-        ulContainer.remove();
-        submitBtn.remove();
-    }
+//         //How can i remove Specific Dom elements ?
+//         ulContainer.remove();
+//         submitBtn.remove();
+//     }
   
-})
+// })
 
+//HOW DO I CHECK MY SELECTED ANSWER FOR EACH QUESTION AGAINST THE CORRECT ANSWER WHEN I CLICK THE SUBMIT BUTTON 
+
+submitBtn.addEventListener("click", function() {
+    // How can i get the selected answer ?
+    const answers = document.querySelectorAll('input[name="answer"]');
+    let selectedAnswer;
+    answers.forEach(answer => {
+        if (answer.checked) {
+            selectedAnswer = answer.id;
+        }
+    });
+
+    // How can i check if an answer is selected ?
+    if (selectedAnswer) {
+        // Compare the selected answer with the correct answer
+        const currentQuizQuestion = quizData[currentQuestion];
+        const isCorrect = selectedAnswer.toUpperCase() === currentQuizQuestion.correct;
+
+        //How can i Display if the answer is correct or wrong
+
+        const resultMessage = document.createElement("p");
+
+        // questionEL.innerText = "";
+
+        // a_text.innerText = "";
+
+        // b_text.innerText = "";
+
+        // c_text.innerText = "";
+
+        // d_text.innerText = "";
+
+        // input_a.style.visibility = "hidden";
+        // input_b.style.visibility = "hidden";
+        // input_c.style.visibility = "hidden";
+        // input_d.style.visibility = "hidden";
+        // submitBtn.style.visibility = "hidden";
+
+
+        if (isCorrect) {
+            resultMessage.textContent = "Correct!";
+            resultMessage.style.color = "green";
+            // resultMessage.style.textAlign = "center";
+            resultMessage.style.fontSize = "clamp(1rem, 2vw, 1.5rem)";
+            endMessage.style.margin = "10px";
+        } else {
+            resultMessage.textContent = `Wrong! The correct answer is ${currentQuizQuestion[currentQuizQuestion.correct.toUpperCase()]}`;
+            resultMessage.style.color = "red";
+            // resultMessage.style.textAlign = "center";
+            resultMessage.style.fontSize = "clamp(1rem, 2vw, 1.5rem)";
+            endMessage.style.margin = "10px";
+        }
+
+        // Append the result message to the DOM
+        endMessage.appendChild(resultMessage);
+
+        // Disable the submit button temporarily to prevent skipping the message
+        submitBtn.disabled = true;
+
+        // Wait a few seconds before moving to the next question
+        setTimeout(() => {
+            // Remove the result message
+            resultMessage.remove();
+            
+            // Enable the submit button
+            submitBtn.disabled = false;
+
+            // Move to the next question or finish the quiz
+            if (currentQuestion < quizData.length - 1) {
+                currentQuestion++;
+                loadquiz();
+            } else {
+                questionEL.innerText = "Congratulations!!!";
+                questionEL.style.fontSize = "clamp(1rem, 4vw, 2rem)";
+                questionEL.style.margin = "10px";
+
+                newElement.textContent = "You have finished the quiz :)";
+                endMessage.appendChild(newElement);
+                newElement.style.textAlign = "center";
+                newElement.style.fontSize = "clamp(1rem, 3vw, 1.5rem)";
+                endMessage.style.margin = "10px";
+
+                ulContainer.remove();
+                submitBtn.remove();
+            }
+        }, 2000); // 2-second delay before moving to the next question
+    } else {
+        alert("Please select an answer before submitting.");
+    }
+});
